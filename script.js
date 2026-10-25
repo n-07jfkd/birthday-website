@@ -1,444 +1,294 @@
-const BIRTHDAY_PASSWORD = "102605";
-
-document.addEventListener("DOMContentLoaded", () => {
-  const screens = document.querySelectorAll(".screen");
-  const digitInputs = [...document.querySelectorAll(".digit")];
-
-  const unlockButton = document.getElementById("unlock-button");
-  const passwordError = document.getElementById("password-error");
-  const restartButton = document.getElementById("restart-button");
-
-  const cakeButton = document.getElementById("cake-button");
-  const makeWishButton = document.getElementById("make-wish-button");
-  const cakeInstruction = document.getElementById("cake-instruction");
-  const wishResult = document.getElementById("wish-result");
-  const confettiLayer = document.getElementById("confetti-layer");
-
-  const twistStart = document.getElementById("twist-start");
-  const twistPanel = document.getElementById("twist-panel");
-
-  const introAudio = document.getElementById("intro-audio");
-  const birthdayAudio = document.getElementById("birthday-audio");
-  const passwordScreen = document.getElementById("screen-password");
-
-  let wishMade = false;
-  let wishTimer = null;
-  let twistTimer = null;
-  let confettiTimer = null;
-
-  function startIntroMusic() {
-    if (!introAudio || !introAudio.paused) return;
-
-    introAudio.play().catch((error) => {
-      console.log("Intro song couldn't play:", error);
-    });
-  }
-
-  function handleEndingMusic(screenId) {
-    if (screenId === "screen-ending") {
-      if (introAudio) {
-        introAudio.pause();
-        introAudio.currentTime = 0;
-      }
-
-      if (birthdayAudio) {
-        birthdayAudio.play().catch((error) => {
-          console.log("Birthday song couldn't play:", error);
-        });
-      }
-    } else {
-      if (birthdayAudio) {
-        birthdayAudio.pause();
-        birthdayAudio.currentTime = 0;
-      }
-
-      if (introAudio && introAudio.paused) {
-        startIntroMusic();
-      }
-    }
-  }
-
-  function showScreen(screenId) {
-    screens.forEach((screen) => {
-      const isActive = screen.id === screenId;
-
-      screen.hidden = !isActive;
-      screen.classList.toggle("active", isActive);
-    });
-
-    handleEndingMusic(screenId);
-
-    window.scrollTo({
-      top: 0,
-      behavior: "smooth"
-    });
-  }
-
-  if (passwordScreen) {
-    passwordScreen.addEventListener("pointerdown", startIntroMusic);
-    passwordScreen.addEventListener("input", startIntroMusic);
-  }
-
-  function unlockWebsite() {
-    const enteredPassword = digitInputs
-      .map((input) => input.value)
-      .join("");
-
-    if (enteredPassword.length !== 6) {
-      passwordError.textContent =
-        "kulang pa ng digits, ay talaga naman. six digits dapat!";
-
-      const firstEmpty = digitInputs.find((input) => !input.value);
-
-      if (firstEmpty) firstEmpty.focus();
-      return;
-    }
-
-    if (enteredPassword === BIRTHDAY_PASSWORD) {
-      passwordError.textContent = "";
-
-      startIntroMusic();
-      showScreen("screen-welcome");
-    } else {
-      passwordError.textContent = "nawh, mali pa";
-
-      digitInputs.forEach((input) => {
-        input.value = "";
-      });
-
-      digitInputs[0].focus();
-
-      const digitRow = document.querySelector(".digit-row");
-
-      if (digitRow) {
-        digitRow.animate(
-          [
-            { transform: "translateX(0)" },
-            { transform: "translateX(-5px)" },
-            { transform: "translateX(5px)" },
-            { transform: "translateX(-3px)" },
-            { transform: "translateX(0)" }
-          ],
-          {
-            duration: 300,
-            iterations: 1
-          }
-        );
-      }
-    }
-  }
-
-  if (unlockButton) {
-    unlockButton.addEventListener("click", unlockWebsite);
-  }
-
-  digitInputs.forEach((input, index) => {
-    input.addEventListener("input", () => {
-      input.value = input.value.replace(/\D/g, "").slice(-1);
-
-      if (input.value && index < digitInputs.length - 1) {
-        digitInputs[index + 1].focus();
-      }
-
-      if (passwordError) {
-        passwordError.textContent = "";
-      }
-    });
-
-    input.addEventListener("keydown", (event) => {
-      if (
-        event.key === "Backspace" &&
-        !input.value &&
-        index > 0
-      ) {
-        digitInputs[index - 1].focus();
-      }
-
-      if (event.key === "Enter") {
-        unlockWebsite();
-      }
-
-      if (event.key === "ArrowLeft" && index > 0) {
-        digitInputs[index - 1].focus();
-      }
-
-      if (
-        event.key === "ArrowRight" &&
-        index < digitInputs.length - 1
-      ) {
-        digitInputs[index + 1].focus();
-      }
-    });
-
-    input.addEventListener("paste", (event) => {
-      event.preventDefault();
-
-      const pasted = event.clipboardData
-        .getData("text")
-        .replace(/\D/g, "")
-        .slice(0, 6);
-
-      pasted.split("").forEach((digit, digitIndex) => {
-        if (digitInputs[digitIndex]) {
-          digitInputs[digitIndex].value = digit;
-        }
-      });
-
-      const nextEmpty = digitInputs.find((box) => !box.value);
-
-      (nextEmpty || digitInputs[digitInputs.length - 1]).focus();
-
-      if (passwordError) {
-        passwordError.textContent = "";
-      }
-    });
-  });
-
-  if (twistStart && twistPanel) {
-    twistStart.addEventListener("click", () => {
-      if (twistStart.disabled || !twistPanel.hidden) return;
-
-      twistStart.disabled = true;
-      twistStart.textContent = "loading...";
-
-      twistTimer = window.setTimeout(() => {
-        twistStart.hidden = true;
-        twistPanel.hidden = false;
-
-        twistPanel.scrollIntoView({
-          behavior: "smooth",
-          block: "center"
-        });
-
-        twistTimer = null;
-      }, 3000);
-    });
-  }
-
-  function launchConfetti() {
-    if (!confettiLayer) return;
-
-    if (confettiTimer !== null) {
-      window.clearTimeout(confettiTimer);
-      confettiTimer = null;
-    }
-
-    confettiLayer.replaceChildren();
-
-    const colors = [
-      "#E9A8C5",
-      "#FCE7F3",
-      "#D783A8",
-      "#F4C7DC",
-      "#D8B5D8",
-      "#FFFFFF"
-    ];
-
-    for (let i = 0; i < 100; i++) {
-      const piece = document.createElement("span");
-
-      piece.className = "confetti-piece";
-      piece.style.left = `${Math.random() * 100}%`;
-
-      piece.style.backgroundColor =
-        colors[Math.floor(Math.random() * colors.length)];
-
-      piece.style.setProperty(
-        "--fall-time",
-        `${2 + Math.random() * 2.2}s`
-      );
-
-      piece.style.setProperty(
-        "--drift",
-        `${Math.random() * 180 - 90}px`
-      );
-
-      piece.style.setProperty(
-        "--rotation",
-        `${Math.random() * 360}deg`
-      );
-
-      piece.style.animationDelay = `${Math.random() * 0.7}s`;
-
-      if (Math.random() > 0.5) {
-        piece.style.borderRadius = "50%";
-        piece.style.width = "7px";
-        piece.style.height = "7px";
-      }
-
-      confettiLayer.appendChild(piece);
-    }
-
-    confettiTimer = window.setTimeout(() => {
-      confettiLayer.replaceChildren();
-      confettiTimer = null;
-    }, 5500);
-  }
-
-  function submitWish() {
-    if (wishMade) return;
-
-    wishMade = true;
-
-    if (cakeButton) {
-      cakeButton.classList.add("blown-out");
-      cakeButton.setAttribute(
-        "aria-label",
-        "The candles are blown out. Your wish is submitted."
-      );
-    }
-
-    if (makeWishButton) {
-      makeWishButton.disabled = true;
-      makeWishButton.textContent = "sending wish to the universe... ♡";
-    }
-
-    if (cakeInstruction) {
-      cakeInstruction.textContent =
-        "whoooosh 💨 wish incoming to the universe!";
-    }
-
-    launchConfetti();
-
-    wishTimer = window.setTimeout(() => {
-      if (wishResult) {
-        wishResult.hidden = false;
-      }
-
-      if (cakeInstruction) {
-        cakeInstruction.textContent =
-          "wish sent successfully. universe, ikaw na bahala. ♡";
-      }
-
-      if (makeWishButton) {
-        makeWishButton.hidden = true;
-      }
-
-      if (wishResult) {
-        wishResult.scrollIntoView({
-          behavior: "smooth",
-          block: "center"
-        });
-      }
-
-      wishTimer = null;
-    }, 1800);
-  }
-
-  if (makeWishButton) {
-    makeWishButton.addEventListener("click", submitWish);
-  }
-
-  if (cakeButton) {
-    cakeButton.addEventListener("click", submitWish);
-  }
-
-  document.querySelectorAll(".next-button").forEach((button) => {
-    button.addEventListener("click", () => {
-      const nextScreen = button.dataset.next;
-
-      if (!nextScreen) return;
-
-      if (nextScreen === "screen-ending" && !wishMade) {
-        if (cakeInstruction) {
-          cakeInstruction.textContent =
-            "teka lang 😭 make a wish muna by tapping the cake!";
-
-          cakeInstruction.scrollIntoView({
-            behavior: "smooth",
-            block: "center"
-          });
-        }
-
-        return;
-      }
-
-      showScreen(nextScreen);
-    });
-  });
-
-  function restartWebsite() {
-    if (wishTimer !== null) {
-      window.clearTimeout(wishTimer);
-      wishTimer = null;
-    }
-
-    if (twistTimer !== null) {
-      window.clearTimeout(twistTimer);
-      twistTimer = null;
-    }
-
-    if (confettiTimer !== null) {
-      window.clearTimeout(confettiTimer);
-      confettiTimer = null;
-    }
-
-    wishMade = false;
-
-    if (introAudio) {
-      introAudio.pause();
-      introAudio.currentTime = 0;
-    }
-
-    if (birthdayAudio) {
-      birthdayAudio.pause();
-      birthdayAudio.currentTime = 0;
-    }
-
-    if (cakeButton) {
-      cakeButton.classList.remove("blown-out");
-      cakeButton.setAttribute(
-        "aria-label",
-        "Tap to blow out the birthday cake candles"
-      );
-    }
-
-    if (makeWishButton) {
-      makeWishButton.hidden = false;
-      makeWishButton.disabled = false;
-      makeWishButton.textContent = "make a wish ♡";
-    }
-
-    if (wishResult) {
-      wishResult.hidden = true;
-    }
-
-    if (cakeInstruction) {
-      cakeInstruction.textContent = "🎂 make a wish!";
-    }
-
-    if (confettiLayer) {
-      confettiLayer.replaceChildren();
-    }
-
-    if (twistStart) {
-      twistStart.hidden = false;
-      twistStart.disabled = false;
-      twistStart.textContent = "okay...";
-    }
-
-    if (twistPanel) {
-      twistPanel.hidden = true;
-    }
-
-    digitInputs.forEach((input) => {
-      input.value = "";
-    });
-
-    if (passwordError) {
-      passwordError.textContent = "";
-    }
-
-    showScreen("screen-password");
-
-    if (digitInputs.length > 0) {
-      digitInputs[0].focus({ preventScroll: true });
-    }
-  }
-
-  if (restartButton) {
-    restartButton.addEventListener("click", restartWebsite);
-  }
-
-  restartWebsite();
-});
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#fff8f0">
+  <title>a little something for u ♡</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="script.js" defer></script>
+</head>
+<body>
+  <main class="site-shell">
+
+    <audio id="intro-audio" loop preload="auto">
+      <source src="audios/blue%20(instrumental).mp3" type="audio/mpeg">
+    </audio>
+
+    <audio id="birthday-audio" loop preload="auto">
+      <source src="audios/HAPPY%20BIRTHDAY%20BY%20KAMBING%20AND%20FRIENDS-%20LYRICS%20(mp3cut.net).mp3" type="audio/mpeg">
+    </audio>
+
+    <div class="site-topline">
+      <span>♡ a little something for u</span>
+      <span aria-hidden="true">✿</span>
+    </div>
+
+    <section class="screen active" id="screen-password" aria-labelledby="password-title">
+      <div class="eyebrow">a little birthday surprise for yah</div>
+
+      <div class="photo-frame hero-photo">
+        <img src="images/bouncer-cat.jpg" alt="A suspicious cat guarding the birthday surprise" onerror="this.style.display='none';this.nextElementSibling.style.display='grid'">
+        <div class="image-fallback">
+          <img src="images/9e1446bd7150ee3d9a330d69d477d963.jpg" alt="Birthday surprise picture">
+        </div>
+      </div>
+
+      <h1 id="password-title">opxs wait lang, cnuh ka munah?</h1>
+
+      <p class="muted center">
+        may ginawa ako for you. pero birthday verification muna, baka mamaya ndeh ikaw yan...
+      </p>
+
+      <label class="field-label" for="digit-1">Enter your birthday to continue </label>
+
+      <div class="digit-row" aria-label="Birthday password, six digits">
+        <input class="digit" id="digit-1" inputmode="numeric" autocomplete="one-time-code" maxlength="1" aria-label="Digit 1">
+        <input class="digit" id="digit-2" inputmode="numeric" maxlength="1" aria-label="Digit 2">
+        <input class="digit" id="digit-3" inputmode="numeric" maxlength="1" aria-label="Digit 3">
+        <input class="digit" id="digit-4" inputmode="numeric" maxlength="1" aria-label="Digit 4">
+        <input class="digit" id="digit-5" inputmode="numeric" maxlength="1" aria-label="Digit 5">
+        <input class="digit" id="digit-6" inputmode="numeric" maxlength="1" aria-label="Digit 6">
+      </div>
+
+      <p class="hint">MMDDYY · 6 digits</p>
+      <p class="error-message" id="password-error" role="status" aria-live="polite"></p>
+
+      <button class="button" id="unlock-button" type="button">unlock my kalokohan →</button>
+
+      <p class="tiny center">if this doesn't work, please don't sue the developer.</p>
+    </section>
+
+    <section class="screen" id="screen-welcome" aria-labelledby="welcome-title" hidden>
+      <div class="eyebrow">WELCOME, BIRTHDAY GIRL &gt;//&lt;</div>
+
+      <div class="photo-frame">
+        <img src="images/surprised-cat.jpg" alt="A surprised cat welcoming you" onerror="this.style.display='none';this.nextElementSibling.style.display='grid'">
+        <div class="image-fallback">
+          <img src="images/daedbcd89e537e137f8f47d6b810ab8c.jpg" alt="Birthday surprise picture">
+        </div>
+      </div>
+
+      <h1 id="welcome-title">YOWN SHA NGA</h1>
+
+      <p class="muted center">hi!! birthday girl &gt;//&lt;</p>
+
+      <div class="soft-panel">
+        <p>so ayun, made a little something for u. wala lang, naisip ko lang na instead of just greeting you, why not make something a bit different diba?</p>
+      </div>
+
+      <p class="center">
+        anwss, enjoy mo lang 'tong little surprise na 'to. don't expect too much ha Y^Y, pero sana kahit papaano, mapangiti kita today hehez
+      </p>
+
+      <button class="button next-button" data-next="screen-letter" type="button">okay... next →</button>
+    </section>
+
+    <section class="screen letter-screen" id="screen-letter" aria-labelledby="letter-title" hidden>
+      <div class="eyebrow">message from yo someone</div>
+
+      <div class="photo-frame letter-photo">
+        <img src="images/work-cat.jpg" alt="A cat supervising the developer at work" onerror="this.style.display='none';this.nextElementSibling.style.display='grid'">
+        <div class="image-fallback">
+          <img src="images/c.jpg" alt="Birthday surprise picture">
+        </div>
+      </div>
+
+      <p class="muted center">okay ser use mode muna, so hehe read this po.</p>
+
+      <article class="letter-copy">
+        <h2>Happy birthday!! ♡</h2>
+
+        <p>
+          Happy birthdayyy, Trishaaa!! so ayun hehe gusto ko lang naman gumawa ng something small for your birthday,
+          tapos biglang nauwi sa website. HWHAHAHAHHAHAHHAHAHAHAH basta ang ending, eto na sha... but honestly, i had fun making this, and i hope kahit papaano, mapangiti ka nito.
+        </p>
+
+        <p>
+          Ik na website isn't really a big thing, and it's definitely not the kind of gift na pwede mong hawakan or itabi,
+          pero i guess just wanted to give you something a little diff this year. somethin na hindi mo lang basta babasahin,
+          something na i actually spent time making kahit na simple lang and hehe may pagkacorny? HWHAHAHAHAHHAHHAHHAHAHHAHA
+          pero i hope na u appreciate it. for this new chapter of your life, i hope things go well for you. sana matuloy mo yung
+          mga bagay na matagal mo nang gustong gawin, maabot mo yung goals mo kahit paunti unti, and magkaroon ka ng more opportunities to try new things.
+          i hope you get more reasons to be excited about what's ahead, and sana may mga unexpected moments din na eventually magiging favorite memories mo.
+        </p>
+
+        <p>
+          i hope you get to enjoy your day. sana makakain ka ng masarap (ikain mo na lang ako ah?? &gt; &lt;), makatawa ka nang marami,
+          and makasama mo yung mga taong comfortable ka kasama. yung mga taong you can be yourself around, kahit wala kayong ginagawa kundi magkwentuhan
+          or tumawa sa mga bagay na hindi naman talaga nakakatawa. hindi naman kailangang maging super grand ang celebration para maging special,
+          so i hope you get to enjoy even the simplest moments today.
+        </p>
+
+        <p>
+          of course, i also hope you have more good days than bad ones. pero alam naman natin na hindi lahat ng araw magiging okay, and that's fine.
+          may mga araw talagang nakakapagod, may mga bagay na hindi nasusunod sa plano, and sometimes things just don't work out the way we want them to.
+          kapag ganon, i hope you remember na okay lang magpahinga muna. hindi mo kailangang madaliin lahat or piliting maging okay agad.
+          take your time lang, one step at a time. i hope you learn to appreciate yourself more po :&gt;, even on days na feeling mo wala kang masyadong nagagawa.
+          kasi sometimes, we get so caught up trying to do better that we forget to appreciate how far we've already come. so sana, kahit sa little things,
+          you give yourself credit poo. hindi naman kailangang may malaking achievement ka palagi para masabing you're doing well. small progress still counts,
+          and you deserve to be proud of yourself, too. i'm not really the best at saying these things, and honestly, medj awkward din ako minsan hehe
+          pero i'm glad i got to know you, and i genuinely hope life brings you good things. sana u meet people who treat you kindly, appreciate you,
+          and make you feel comfortable being yourself. yung mga taong willing makinig kapag may gusto kang ikwento, sasabayan ka sa mga random mong trip,
+          and make even ordinary days feel a little lighter.
+        </p>
+
+        <p>
+          and if there's one thing i wish for you, it's that you get to experience more moments where you're genuinely happy. yung happiness na hindi mo kailangang pilitin,
+          hindi dahil kailangan mong maging okay for other people, but simply because you're enjoying where you are and the people you're with.
+          and sana kahit sa mga ordinary days, may little things pa rin na nagbibigay sa'yo ng reason to smile.
+        </p>
+
+        <p>
+          also, sorry kung digital flowers lang muna ang gift ko HWAHHAHAHAHHAHAHHAHAHAHHAHAHAHAH wala munang actual flower delivery from your someone.
+          at least ayan hindi malalanta, hindi kailangan diligan, and environmentally friendly pa HWAHHAHAHAHHAHAHHAHAHHAHAHHAHAHHAHAH
+          pero malay mo... maybe someday, actual flowers naman, pero for now, ito muna ang kaya ng developer mows.
+          but seriously, thank you for taking the time to open this little website. i know itz just a small thing, and medyo random din yung ibang parts,
+          pero i made it hoping na it would make your birthday a little more fun. i guess i just wanted to give you something na may konting effort and thought behind it,
+          something you could look back on and hopefully smile about.
+        </p>
+
+        <p>
+          enjoy your day, okay? eat something you really like, take care of yourself, and don't forget to enjoy the little moments.
+          take pictures if you want, laugh as much as you can, and let yourself enjoy being celebrated today. you don't have to do anything extraordinary.
+          it's your day, and i hope you get to spend it in a way that makes you happy. i hope this year brings you more happy memories, good experiences,
+          genuine people, and lots of little reasons to smile. sana maging kinder sa'yo ang year na 'to, and sana marami kang bagay na malook forward to.
+          happy birthday ulit, birthday girl!! take care always, and i hope you have a really good one. you deserve good things, today and on the ordinary days, too.
+        </p>
+
+        <p>happy birthday, babyy! &gt;//&lt;</p>
+        <p class="signature">— your developer 0_0</p>
+      </article>
+
+      <div class="photo-frame small-photo">
+        <img src="images/shy-cat.jpg" alt="A shy cat hiding behind a laptop" onerror="this.style.display='none';this.nextElementSibling.style.display='grid'">
+        <div class="image-fallback">
+          <img src="images/7f051062794ba6a9d4a33bc190893979.jpg" alt="Birthday surprise picture">
+        </div>
+      </div>
+
+      <p class="tiny center">developer is now shy. please wait...</p>
+
+      <button class="button" id="twist-start" type="button">okay...</button>
+
+      <div class="soft-panel twist-panel" id="twist-panel" hidden>
+        <h2>EME LANG</h2>
+        <p>hehehe</p>
+        <button class="button next-button" data-next="screen-flowers" type="button">sige na, next →</button>
+      </div>
+    </section>
+
+    <section class="screen" id="screen-flowers" aria-labelledby="flowers-title" hidden>
+      <h1 id="flowers-title">special delivery for u</h1>
+
+      <p class="muted center">walang rider na involved, digital delivery lang muna tayo</p>
+
+      <div class="photo-frame bouquet-photo">
+        <img src="images/flowers.jpg" alt="A bouquet of pink tulips" onerror="this.style.display='none';this.nextElementSibling.style.display='grid'">
+        <div class="image-fallback">
+          <img src="images/2026-10-25 164045.png" alt="Birthday surprise picture">
+        </div>
+      </div>
+
+      <div class="soft-panel">
+        <h2>flowers for the birthday girl ♡</h2>
+        <p>
+          sana may totoong flowers akong maibigay sayo ngayon, pero for now, eto muna.
+          i made this little digital bouquet sa website na ano, ion know pero for sure nakita mo na to sa tiktok
+          (shoutout sa website na yon, naging florist ako for a day)
+        </p>
+        <p>
+          sorry kung digital flowers lang muna ang maibibigay ko sayo ngayon. ik it's not the same as receiving actual flowers,
+          pero i still wanted to give you something kahit simple lang.
+        </p>
+      </div>
+
+      <div class="photo-frame small-photo intern-photo">
+        <img src="images/flower-intern.jpg" alt="The unpaid intern checking flower quality" onerror="this.style.display='none';this.nextElementSibling.style.display='grid'">
+        <div class="image-fallback">
+          <img src="images/c43b9a814e9dff60ce6d6dfab823e766.jpg" alt="Birthday surprise picture">
+        </div>
+      </div>
+
+      <button class="button next-button" data-next="screen-cake" type="button">next →</button>
+    </section>
+
+    <section class="screen" id="screen-cake" aria-labelledby="cake-title" hidden>
+      <button class="cake-button" id="cake-button" type="button" aria-label="Tap to blow out the birthday cake candles">
+        <span class="cake-visual">
+          <img src="images/cake.jpg" alt="A little birthday cake with candles" onerror="this.style.display='none';this.nextElementSibling.style.display='grid'">
+          <span class="image-fallback">
+            <img src="images/962e5eaddddc13d6df046722468530f2.jpg" alt="Birthday surprise picture">
+          </span>
+        </span>
+      </button>
+
+      <h1 id="cake-title">your turn to make a wish.</h1>
+
+      <p class="muted center">
+        close your eyes for a sec then think of somethin you really want. kahit gano kalaki or kaliit,
+        secret mo na yan ah...
+      </p>
+
+      <div class="soft-panel">
+        <p>secret yan ah (baka hindi ko kayang i-code yan)</p>
+      </div>
+
+      <p class="muted center" id="cake-instruction">🎂 make a wish!</p>
+      <div id="confetti-layer" aria-hidden="true"></div>
+
+      <button class="button" id="make-wish-button" type="button">make a wish ♡</button>
+
+      <div class="soft-panel" id="wish-result" hidden>
+        <h2>wish successfully submitted!</h2>
+        <p>the developer has forwarded your request to the universe (wala akong control sa processing time, hehe sorry)</p>
+        <p>i hope the things you quietly wish for find their way to you one by one.</p>
+        <button class="button next-button" data-next="screen-ending" type="button">okay, last page na →</button>
+      </div>
+    </section>
+
+    <section class="screen" id="screen-ending" aria-labelledby="ending-title" hidden>
+      <div class="photo-frame">
+        <img src="images/sleepy-cat.jpg" alt="A sleepy cat resting on a blanket" onerror="this.style.display='none';this.nextElementSibling.style.display='grid'">
+        <div class="image-fallback">
+          <img src="images/77380b984d9793f68a8ffc417f20038c.jpg" alt="Birthday surprise picture">
+        </div>
+      </div>
+
+      <h1 id="ending-title">the End</h1>
+      <p class="muted center">hehehe</p>
+
+      <article class="letter-copy ending-copy">
+        <h2>Happy birthday ulit!!</h2>
+        <p>
+          i hope na kahit papaano, napasaya ka ng lil project na 'to, ik its not much and simple lang siya...
+          i hope you smiled somewhere along the way, kahit dahil lang sa mga random cats dito (ano sila emotional support)
+        </p>
+        <p>
+          keep being you lang, hmki? take care of yourself poo nd dont be too hard on yourself,
+          and sana u always find time to enjoy lil things, kahit busy ka or stressful minsan ang life.
+        </p>
+        <p>
+          from ur very unserious developer, thank u for being my reason to make something this anez
+          (with the help of several unemployed cats). hehehe happy birthday ulit, baby!!
+          have the happiest birthday, okay? &gt;//&lt;
+        </p>
+      </article>
+
+      <div class="photo-frame small-photo">
+        <img src="images/final-meme.jpg" alt="A silly cat meme to end the website" onerror="this.style.display='none';this.nextElementSibling.style.display='grid'">
+        <div class="image-fallback">
+          <img src="images/ef76686426da9105632d54e0c5e757fc.jpg" alt="Birthday surprise picture">
+        </div>
+      </div>
+
+      <p class="tiny center">made by me, tested by cats, approved by absolutely nobody.</p>
+
+      <button class="button" id="restart-button" type="button">↻ back to start</button>
+
+      <p class="tiny center footer-credit">a little something for u · made with ♡ by your developer</p>
+    </section>
+
+  </main>
+</body>
+</html>
