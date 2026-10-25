@@ -404,7 +404,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (twistStart) {
       twistStart.hidden = false;
       twistStart.disabled = false;
-      twistStart.textContent = "okay";
+      twistStart.textContent = "okay...";
     }
 
     if (twistPanel) {
