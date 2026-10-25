@@ -17,12 +17,47 @@ document.addEventListener("DOMContentLoaded", () => {
   const twistStart = document.getElementById("twist-start");
   const twistPanel = document.getElementById("twist-panel");
 
+  const introAudio = document.getElementById("intro-audio");
+  const birthdayAudio = document.getElementById("birthday-audio");
+  const passwordScreen = document.getElementById("screen-password");
+
   let wishMade = false;
   let wishTimer = null;
   let twistTimer = null;
   let confettiTimer = null;
 
-  // Show one screen and hide the others.
+  function startIntroMusic() {
+    if (!introAudio || !introAudio.paused) return;
+
+    introAudio.play().catch((error) => {
+      console.log("Intro song couldn't play:", error);
+    });
+  }
+
+  function handleEndingMusic(screenId) {
+    if (screenId === "screen-ending") {
+      if (introAudio) {
+        introAudio.pause();
+        introAudio.currentTime = 0;
+      }
+
+      if (birthdayAudio) {
+        birthdayAudio.play().catch((error) => {
+          console.log("Birthday song couldn't play:", error);
+        });
+      }
+    } else {
+      if (birthdayAudio) {
+        birthdayAudio.pause();
+        birthdayAudio.currentTime = 0;
+      }
+
+      if (introAudio && introAudio.paused) {
+        startIntroMusic();
+      }
+    }
+  }
+
   function showScreen(screenId) {
     screens.forEach((screen) => {
       const isActive = screen.id === screenId;
@@ -31,13 +66,19 @@ document.addEventListener("DOMContentLoaded", () => {
       screen.classList.toggle("active", isActive);
     });
 
+    handleEndingMusic(screenId);
+
     window.scrollTo({
       top: 0,
       behavior: "smooth"
     });
   }
 
-  // PASSWORD SCREEN
+  if (passwordScreen) {
+    passwordScreen.addEventListener("pointerdown", startIntroMusic);
+    passwordScreen.addEventListener("input", startIntroMusic);
+  }
+
   function unlockWebsite() {
     const enteredPassword = digitInputs
       .map((input) => input.value)
@@ -47,9 +88,7 @@ document.addEventListener("DOMContentLoaded", () => {
       passwordError.textContent =
         "kulang pa ng digits, ay talaga naman. six digits dapat!";
 
-      const firstEmpty = digitInputs.find(
-        (input) => !input.value
-      );
+      const firstEmpty = digitInputs.find((input) => !input.value);
 
       if (firstEmpty) firstEmpty.focus();
       return;
@@ -57,6 +96,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (enteredPassword === BIRTHDAY_PASSWORD) {
       passwordError.textContent = "";
+
+      startIntroMusic();
       showScreen("screen-welcome");
     } else {
       passwordError.textContent = "nawh, mali pa";
@@ -143,9 +184,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
       });
 
-      const nextEmpty = digitInputs.find(
-        (box) => !box.value
-      );
+      const nextEmpty = digitInputs.find((box) => !box.value);
 
       (nextEmpty || digitInputs[digitInputs.length - 1]).focus();
 
@@ -155,13 +194,12 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  // DEVELOPER LETTER PLOT TWIST
   if (twistStart && twistPanel) {
     twistStart.addEventListener("click", () => {
       if (twistStart.disabled || !twistPanel.hidden) return;
 
       twistStart.disabled = true;
-      twistStart.textContent = "loading... (3mins)";
+      twistStart.textContent = "loading...";
 
       twistTimer = window.setTimeout(() => {
         twistStart.hidden = true;
@@ -176,8 +214,6 @@ document.addEventListener("DOMContentLoaded", () => {
       }, 3000);
     });
   }
-
-  // CONFETTI
 
   function launchConfetti() {
     if (!confettiLayer) return;
@@ -239,10 +275,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }, 5500);
   }
 
-  // =========================================
-  // MAKE A WISH
-  // =========================================
-
   function submitWish() {
     if (wishMade) return;
 
@@ -258,8 +290,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (makeWishButton) {
       makeWishButton.disabled = true;
-      makeWishButton.textContent =
-        "sending wish to the universe... ♡";
+      makeWishButton.textContent = "sending wish to the universe... ♡";
     }
 
     if (cakeInstruction) {
@@ -294,7 +325,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }, 1800);
   }
 
-  // One shared handler only — no duplicate cake interaction.
   if (makeWishButton) {
     makeWishButton.addEventListener("click", submitWish);
   }
@@ -303,17 +333,13 @@ document.addEventListener("DOMContentLoaded", () => {
     cakeButton.addEventListener("click", submitWish);
   }
 
-  // NEXT SCREEN BUTTONS
   document.querySelectorAll(".next-button").forEach((button) => {
     button.addEventListener("click", () => {
       const nextScreen = button.dataset.next;
 
       if (!nextScreen) return;
 
-      if (
-        nextScreen === "screen-ending" &&
-        !wishMade
-      ) {
+      if (nextScreen === "screen-ending" && !wishMade) {
         if (cakeInstruction) {
           cakeInstruction.textContent =
             "teka lang 😭 make a wish muna by tapping the cake!";
@@ -331,9 +357,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  // FULL RESTART — RESET EVERYTHING ♡
   function restartWebsite() {
-    // Cancel pending actions from the previous playthrough.
     if (wishTimer !== null) {
       window.clearTimeout(wishTimer);
       wishTimer = null;
@@ -349,12 +373,20 @@ document.addEventListener("DOMContentLoaded", () => {
       confettiTimer = null;
     }
 
-    // Reset wish interaction.
     wishMade = false;
+
+    if (introAudio) {
+      introAudio.pause();
+      introAudio.currentTime = 0;
+    }
+
+    if (birthdayAudio) {
+      birthdayAudio.pause();
+      birthdayAudio.currentTime = 0;
+    }
 
     if (cakeButton) {
       cakeButton.classList.remove("blown-out");
-
       cakeButton.setAttribute(
         "aria-label",
         "Tap to blow out the birthday cake candles"
@@ -375,12 +407,10 @@ document.addEventListener("DOMContentLoaded", () => {
       cakeInstruction.textContent = "🎂 make a wish!";
     }
 
-    // Clear the old confetti completely.
     if (confettiLayer) {
       confettiLayer.replaceChildren();
     }
 
-    // Reset the developer-letter plot twist.
     if (twistStart) {
       twistStart.hidden = false;
       twistStart.disabled = false;
@@ -391,7 +421,6 @@ document.addEventListener("DOMContentLoaded", () => {
       twistPanel.hidden = true;
     }
 
-    // Reset the password inputs and error message.
     digitInputs.forEach((input) => {
       input.value = "";
     });
@@ -400,7 +429,6 @@ document.addEventListener("DOMContentLoaded", () => {
       passwordError.textContent = "";
     }
 
-    // Return to the first screen.
     showScreen("screen-password");
 
     if (digitInputs.length > 0) {
@@ -412,6 +440,5 @@ document.addEventListener("DOMContentLoaded", () => {
     restartButton.addEventListener("click", restartWebsite);
   }
 
-  // Start fresh whenever the website first opens.
   restartWebsite();
 });
