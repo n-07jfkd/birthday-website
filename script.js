@@ -1,3 +1,4 @@
+//basts script leche
 const BIRTHDAY_PASSWORD = "102605";
 
 document.addEventListener("DOMContentLoaded", () => {
