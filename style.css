@@ -4,18 +4,23 @@
    Soft peach · Cream · Mobile-first
 ========================================= */
 
+
 :root {
-  --background: #fffaf6;
-  --card: #fff8f0;
-  --peach: #edcbb9;
-  --peach-dark: #d9ad97;
-  --peach-light: #f8e6da;
-  --brown: #795f53;
-  --brown-dark: #5e493f;
-  --muted: #a28a7d;
-  --white: #ffffff;
-  --error: #c46c67;
-  --shadow: 0 10px 35px rgba(117, 82, 63, 0.09);
+  --background: #FFF7FB;
+  --card: #FFFBFE;
+
+  --peach: #E9A8C5;
+  --peach-dark: #D783A8;
+  --peach-light: #FCE7F3;
+
+  --brown: #80566B;
+  --brown-dark: #60364A;
+  --muted: #AB8A9B;
+
+  --white: #FFFFFF;
+  --error: #C46C80;
+
+  --shadow: 0 10px 35px rgba(180, 105, 145, 0.10);
 }
 
 * {
@@ -200,6 +205,23 @@ p {
   object-fit: cover;
 }
 
+
+    /* Developer letter plot twist */
+
+    .twist-panel[hidden] {
+    display: none !important;
+    }
+
+    .twist-panel {
+    margin-top: 18px;
+    animation: screen-enter 0.5s ease both;
+    }
+
+    #twist-start {
+    margin-top: 15px;
+    }
+
+
 .image-fallback {
   display: none;
   place-items: center;
@@ -207,7 +229,7 @@ p {
   gap: 5px;
   width: 100%;
   min-height: 140px;
-  padding: 15px;
+  padding: 8px;
   background: #fffdfb;
   color: var(--brown);
   font-size: 46px;
@@ -581,6 +603,46 @@ p {
   }
 }
 
+
+/* Wish confirmation panel — normal document flow */
+#screen-cake #wish-result {
+  position: static !important;
+  inset: auto !important;
+  transform: none !important;
+  float: none !important;
+
+  width: 100%;
+  height: auto;
+  margin: 24px 0 0;
+  padding: 20px 15px;
+
+  display: block;
+  box-sizing: border-box;
+  background: var(--peach-light);
+  border: 1px solid rgba(217, 173, 151, 0.25);
+  border-radius: 14px;
+  text-align: center;
+  z-index: auto;
+  animation: screen-enter 0.5s ease both;
+}
+
+#screen-cake #wish-result[hidden] {
+  display: none !important;
+}
+
+#screen-cake #wish-result h2 {
+  margin-bottom: 12px;
+}
+
+#screen-cake #wish-result p {
+  line-height: 1.8;
+}
+
+#screen-cake #wish-result .button {
+  margin-top: 18px;
+}
+
+
 /* Respect reduced-motion preferences */
 
 @media (prefers-reduced-motion: reduce) {
@@ -592,4 +654,6 @@ p {
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
+
+  
 }
