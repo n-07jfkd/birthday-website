@@ -1,4 +1,4 @@
-//basta script to
+//basta script sa js
 const BIRTHDAY_PASSWORD = "102605";
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -200,7 +200,7 @@ document.addEventListener("DOMContentLoaded", () => {
       if (twistStart.disabled || !twistPanel.hidden) return;
 
       twistStart.disabled = true;
-      twistStart.textContent = "loading...";
+      twistStart.textContent = "loading...(3mins)";
 
       twistTimer = window.setTimeout(() => {
         twistStart.hidden = true;
