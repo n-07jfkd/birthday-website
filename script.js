@@ -1,4 +1,5 @@
 //basta script sa js
+//fo mah girl
 const BIRTHDAY_PASSWORD = "102605";
 
 document.addEventListener("DOMContentLoaded", () => {
