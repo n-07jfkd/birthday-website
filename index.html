@@ -1,0 +1,466 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#fff8f0">
+
+  <title>a little something for u ♡</title>
+
+  <link rel="stylesheet" href="style.css">
+  <script src="script.js" defer></script>
+</head>
+
+<body>
+  <main class="site-shell">
+
+    <div class="site-topline">
+      <span>♡ a little something for u</span>
+      <span aria-hidden="true">✿</span>
+    </div>
+
+    <!-- 01 — PASSWORD SCREEN -->
+    <section
+      class="screen active"
+      id="screen-password"
+      aria-labelledby="password-title"
+    >
+      <div class="eyebrow">a tiny birthday surprise</div>
+
+      <div class="photo-frame hero-photo">
+        <img
+          src="images/bouncer-cat.jpg"
+          alt="A suspicious cat guarding the birthday surprise"
+          onerror="this.style.display='none';this.nextElementSibling.style.display='grid'"
+        >
+        <div class="image-fallback">
+          😼
+          <small>security team (unpaid)</small>
+        </div>
+      </div>
+
+      <h1 id="password-title">hala, wait lang.</h1>
+
+      <p class="muted center">
+        May bouncer tayo dito. Medyo cute nga lang at hindi marunong magtrabaho.
+      </p>
+
+      <label class="field-label" for="digit-1">
+        Enter your birthday 🎂
+      </label>
+
+      <div class="digit-row" aria-label="Birthday password, six digits">
+        <input class="digit" id="digit-1" inputmode="numeric"
+          autocomplete="one-time-code" maxlength="1" aria-label="Digit 1">
+        <input class="digit" id="digit-2" inputmode="numeric"
+          maxlength="1" aria-label="Digit 2">
+        <input class="digit" id="digit-3" inputmode="numeric"
+          maxlength="1" aria-label="Digit 3">
+        <input class="digit" id="digit-4" inputmode="numeric"
+          maxlength="1" aria-label="Digit 4">
+        <input class="digit" id="digit-5" inputmode="numeric"
+          maxlength="1" aria-label="Digit 5">
+        <input class="digit" id="digit-6" inputmode="numeric"
+          maxlength="1" aria-label="Digit 6">
+      </div>
+
+      <p class="hint">MMDDYY · 6 digits</p>
+
+      <p
+        class="error-message"
+        id="password-error"
+        role="status"
+        aria-live="polite"
+      ></p>
+
+      <button class="button" id="unlock-button" type="button">
+        unlock this thing →
+      </button>
+
+      <p class="tiny center">
+        If this doesn't work, please don't sue the developer.
+      </p>
+    </section>
+
+
+    <!-- 02 — WELCOME SCREEN -->
+    <section
+      class="screen"
+      id="screen-welcome"
+      aria-labelledby="welcome-title"
+      hidden
+    >
+      <div class="eyebrow">LOGIN SUCCESSFUL ✓</div>
+
+      <div class="photo-frame">
+        <img
+          src="images/surprised-cat.jpg"
+          alt="A surprised cat welcoming you"
+          onerror="this.style.display='none';this.nextElementSibling.style.display='grid'"
+        >
+        <div class="image-fallback">
+          🙀
+          <small>wait... ikaw talaga 'yan?</small>
+        </div>
+      </div>
+
+      <h1 id="welcome-title">AY, NASA LOOB KA NA.</h1>
+
+      <p class="muted center">
+        Welcome!! Huwag kang mag-alala, safe ka rito. I think.
+      </p>
+
+      <div class="soft-panel">
+        <p>
+          This little website was made by one (1) developer na naisipang
+          gumawa ng something for your birthday.
+        </p>
+      </div>
+
+      <p class="center">
+        And yes, that developer is me. HAHAHA. Wala lang, naisip ko
+        lang gumawa nito for you.
+      </p>
+
+      <button
+        class="button next-button"
+        data-next="screen-letter"
+        type="button"
+      >
+        sige, pakita ko pa →
+      </button>
+    </section>
+
+
+    <!-- 03 — BIRTHDAY LETTER -->
+    <section
+      class="screen letter-screen"
+      id="screen-letter"
+      aria-labelledby="letter-title"
+      hidden
+    >
+      <div class="eyebrow">03 — a message from the developer 💌</div>
+
+      <div class="photo-frame letter-photo">
+        <img
+          src="images/work-cat.jpg"
+          alt="A cat supervising the developer at work"
+          onerror="this.style.display='none';this.nextElementSibling.style.display='grid'"
+        >
+        <div class="image-fallback">
+          🐈💻
+          <small>working very hard (not)</small>
+        </div>
+      </div>
+
+      <h1 id="letter-title">developer's note</h1>
+
+      <p class="muted center">
+        chill lang, hindi ito error message.
+      </p>
+
+      <article class="letter-copy">
+        <h2>Happy birthday!! ♡</h2>
+
+        <p>
+          So ayun, I made this little website for you. Hindi naman ako
+          expert developer or anything, pero naisip ko lang na it would
+          be nice to make something na you can open on your birthday.
+        </p>
+
+        <p>
+          Medyo random siya, may cats na hindi naman tumutulong sa coding,
+          and probably more effort than necessary. Pero at least may
+          ginagawa akong productive kunwari. HAHAHA.
+        </p>
+
+        <p>
+          Jokes aside, I hope you have a really nice birthday. I hope
+          you get to enjoy your day, spend time with people who make you
+          happy, and do something nice for yourself.
+        </p>
+
+        <p>
+          I hope this next year brings you good memories, new opportunities,
+          and lots of little reasons to smile. You deserve good things,
+          even on days when nothing particularly special is happening.
+        </p>
+
+        <p>
+          Anyway, thank you for being someone worth making a whole website
+          for. 😭 I hope this small thing makes you smile, even just for a bit.
+        </p>
+
+        <p>
+          Enjoy your day, okay? Happy birthday ulit!!
+        </p>
+
+        <p class="signature">— your developer, aka me ♡</p>
+      </article>
+
+      <div class="photo-frame small-photo">
+        <img
+          src="images/shy-cat.jpg"
+          alt="A shy cat hiding behind a laptop"
+          onerror="this.style.display='none';this.nextElementSibling.style.display='grid'"
+        >
+        <div class="image-fallback">
+          😳
+          <small>developer is now shy</small>
+        </div>
+      </div>
+
+      <p class="tiny center">
+        developer is now shy. please wait...
+      </p>
+
+      <button
+        class="button next-button"
+        data-next="screen-flowers"
+        type="button"
+      >
+        next feature loading →
+      </button>
+    </section>
+
+
+    <!-- 04 — FLOWERS SCREEN -->
+    <section
+      class="screen"
+      id="screen-flowers"
+      aria-labelledby="flowers-title"
+      hidden
+    >
+      <div class="eyebrow">04 — the developer ordered flowers 🌷</div>
+
+      <h1 id="flowers-title">special delivery for u</h1>
+
+      <p class="muted center">
+        Walang rider na involved. Digital delivery lang muna tayo.
+      </p>
+
+      <div class="photo-frame bouquet-photo">
+        <img
+          src="images/flowers.jpg"
+          alt="A bouquet of pink tulips"
+          onerror="this.style.display='none';this.nextElementSibling.style.display='grid'"
+        >
+        <div class="image-fallback">
+          💐
+          <small>digital flowers, real effort</small>
+        </div>
+      </div>
+
+      <div class="soft-panel">
+        <h2>flowers for the birthday girl ♡</h2>
+        <p>
+          A little something from me to you. Sana maraming magagandang
+          bagay ang dumating sa'yo this year.
+        </p>
+      </div>
+
+      <div class="photo-frame small-photo intern-photo">
+        <img
+          src="images/flower-intern.jpg"
+          alt="The unpaid intern checking flower quality"
+          onerror="this.style.display='none';this.nextElementSibling.style.display='grid'"
+        >
+        <div class="image-fallback">
+          🐱
+          <small>quality control</small>
+        </div>
+      </div>
+
+      <p class="tiny center">
+        flower quality checked by our unpaid intern.
+      </p>
+
+      <button
+        class="button next-button"
+        data-next="screen-cake"
+        type="button"
+      >
+        may cake pa, wait →
+      </button>
+    </section>
+
+
+    <!-- 05 — BIRTHDAY CAKE SCREEN -->
+    <section
+      class="screen"
+      id="screen-cake"
+      aria-labelledby="cake-title"
+      hidden
+    >
+      <div class="eyebrow">05 — one wish, please 🎂</div>
+
+      <button
+        class="cake-button"
+        id="cake-button"
+        type="button"
+        aria-label="Tap to blow out the birthday cake candles"
+      >
+        <span class="cake-visual">
+          <img
+            src="images/cake.jpg"
+            alt="A little birthday cake with candles"
+            onerror="this.style.display='none';this.nextElementSibling.style.display='grid'"
+          >
+          <span class="image-fallback">
+            🎂
+            <small>birthday cake</small>
+          </span>
+          <span class="candle-flames" aria-hidden="true">🔥 🔥 🔥</span>
+        </span>
+      </button>
+
+      <h1 id="cake-title">your turn to make a wish.</h1>
+
+      <p class="muted center">
+        Think of one thing you really want. Kahit sobrang random pa 'yan,
+        basta important sa'yo.
+      </p>
+
+      <div class="soft-panel">
+        <p>
+          No telling the developer your wish. Baka hindi niya kayang
+          i-code. 😭
+        </p>
+      </div>
+
+      <p class="muted center">
+        Ready? Tap the cake to blow out your candles.
+      </p>
+
+      <p class="tiny center" id="cake-instruction">
+        🎂 make a wish!
+      </p>
+
+      <div id="confetti-layer" aria-hidden="true"></div>
+
+      <div class="wish-result" id="wish-result" hidden>
+        <div class="photo-frame">
+          <img
+            src="images/wish-cake.jpg"
+            alt="A birthday cake with colorful confetti"
+            onerror="this.style.display='none';this.nextElementSibling.style.display='grid'"
+          >
+          <div class="image-fallback">
+            🎉🎂
+            <small>wish incoming...</small>
+          </div>
+        </div>
+
+        <h2>wish submitted successfully ✓</h2>
+
+        <p class="muted center">
+          Status: pending approval from the universe.
+        </p>
+
+        <div class="photo-frame small-photo">
+          <img
+            src="images/praying-cat.jpg"
+            alt="A cat praying for your wish to come true"
+            onerror="this.style.display='none';this.nextElementSibling.style.display='grid'"
+          >
+          <div class="image-fallback">
+            🐱🙏
+            <small>praying for the plot</small>
+          </div>
+        </div>
+
+        <p class="center">
+          Pero seriously, I hope it comes true. Rooting for you!!
+        </p>
+      </div>
+
+      <button
+        class="button next-button"
+        data-next="screen-ending"
+        type="button"
+      >
+        okay, last page na → 
+      </button>
+    </section>
+
+
+    <!-- 06 — ENDING SCREEN -->
+    <section
+      class="screen"
+      id="screen-ending"
+      aria-labelledby="ending-title"
+      hidden
+    >
+      <div class="eyebrow">06 — end of project ♡</div>
+
+      <div class="photo-frame">
+        <img
+          src="images/sleepy-cat.jpg"
+          alt="A sleepy cat resting on a blanket"
+          onerror="this.style.display='none';this.nextElementSibling.style.display='grid'"
+        >
+        <div class="image-fallback">
+          😴🐈
+          <small>developer's current mood</small>
+        </div>
+      </div>
+
+      <h1 id="ending-title">and that's a wrap!</h1>
+
+      <p class="muted center">
+        Website completed. Developer needs sleep.
+      </p>
+
+      <article class="letter-copy ending-copy">
+        <h2>Happy birthday ulit!!</h2>
+
+        <p>
+          I know this is just a small thing, pero I wanted to make
+          something for you instead of just sending a regular birthday greeting.
+        </p>
+
+        <p>
+          I hope you smiled somewhere along the way, kahit dahil lang
+          sa mga random cats dito. HAHAHA.
+        </p>
+
+        <p>
+          I wish you more happiness, peaceful days, good people, and
+          opportunities that make you excited for what's next.
+        </p>
+
+        <p>
+          Thank you for being you, and I hope life treats you kindly.
+          Take care of yourself always, okay?
+        </p>
+      </article>
+
+      <div class="photo-frame small-photo">
+        <img
+          src="images/final-meme.jpg"
+          alt="A silly cat meme to end the website"
+          onerror="this.style.display='none';this.nextElementSibling.style.display='grid'"
+        >
+        <div class="image-fallback">
+          🐈
+          <small>mission accomplished</small>
+        </div>
+      </div>
+
+      <p class="tiny center">
+        made by me, tested by cats, approved by absolutely nobody.
+      </p>
+
+      <button class="button" id="restart-button" type="button">
+        ↻ balik sa simula
+      </button>
+
+      <p class="tiny center footer-credit">
+        a little something for u · made with ♡ by your developer
+      </p>
+    </section>
+
+  </main>
+</body>
+</html>
