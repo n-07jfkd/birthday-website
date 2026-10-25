@@ -1,10 +1,4 @@
 
-/* =========================================
-   A LITTLE SOMETHING FOR U ♡
-   Soft peach · Cream · Mobile-first
-========================================= */
-
-
 :root {
   --background: #FFF7FB;
   --card: #FFFBFE;
@@ -401,7 +395,7 @@ p {
   border-radius: 13px;
   background: #fffdfb;
   text-align: left;
-  font-size: 12px;
+  font-size: 14px;
   line-height: 1.85;
   overflow-wrap: anywhere;
 }
