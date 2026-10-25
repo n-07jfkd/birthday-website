@@ -1,4 +1,4 @@
-//basts script leche
+//basta script to
 const BIRTHDAY_PASSWORD = "102605";
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -296,7 +296,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (cakeInstruction) {
       cakeInstruction.textContent =
-        "whoooosh 💨 wish incoming to the universe!";
+        "....";
     }
 
     launchConfetti();
@@ -308,7 +308,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
       if (cakeInstruction) {
         cakeInstruction.textContent =
-          "wish sent successfully. universe, ikaw na bahala. ♡";
+          "wish sent successfully. universe, ikaw na bahala hehe";
       }
 
       if (makeWishButton) {
