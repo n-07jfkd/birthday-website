@@ -1,9 +1,3 @@
-
-/* =========================================
-   A LITTLE SOMETHING FOR U ♡
-   Birthday website interactions
-========================================= */
-
 const BIRTHDAY_PASSWORD = "102605";
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -43,10 +37,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // =========================================
   // PASSWORD SCREEN
-  // =========================================
-
   function unlockWebsite() {
     const enteredPassword = digitInputs
       .map((input) => input.value)
@@ -164,10 +155,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  // =========================================
   // DEVELOPER LETTER PLOT TWIST
-  // =========================================
-
   if (twistStart && twistPanel) {
     twistStart.addEventListener("click", () => {
       if (twistStart.disabled || !twistPanel.hidden) return;
@@ -189,9 +177,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // =========================================
   // CONFETTI
-  // =========================================
 
   function launchConfetti() {
     if (!confettiLayer) return;
@@ -317,10 +303,7 @@ document.addEventListener("DOMContentLoaded", () => {
     cakeButton.addEventListener("click", submitWish);
   }
 
-  // =========================================
   // NEXT SCREEN BUTTONS
-  // =========================================
-
   document.querySelectorAll(".next-button").forEach((button) => {
     button.addEventListener("click", () => {
       const nextScreen = button.dataset.next;
@@ -348,10 +331,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  // =========================================
   // FULL RESTART — RESET EVERYTHING ♡
-  // =========================================
-
   function restartWebsite() {
     // Cancel pending actions from the previous playthrough.
     if (wishTimer !== null) {
